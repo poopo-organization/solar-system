@@ -8,23 +8,24 @@ pipeline {
     stages {
         stage('VM Node Version') {
             steps {
-                // Execute shell commands
                 sh 'node -v'
                 sh 'npm -v'
             }
         }
-    stage('Install Dependencies') {
+
+        stage('Install Dependencies') {
             steps {
                 sh 'npm install --no-audit'
             }
         } 
-    stage('NPM Dependency Audit') {
-            steps {
-                sh'''
 
-                    npm audit -- audit-level=critical
-                    echo $?    
+        stage('NPM Dependency Audit') {
+            steps {
+                sh '''
+                    npm audit --audit-level=critical
+                    echo $?
                 '''
             }       
+        }
     }
 }
