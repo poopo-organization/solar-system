@@ -13,5 +13,10 @@ pipeline {
                 sh 'npm -v'
             }
         }
+    stage('Install Dependencies') {
+            steps {
+                sh 'npm install --no-audit'
+            }
+        }    
     }
 }
