@@ -36,8 +36,9 @@ pipeline {
         } 
         stage('Code Coverage') {
             steps {
-                catchError(buildResult: 'SUCCESS', message: 'Oops! it will be fixed in future')
+                catchError(buildResult: 'SUCCESS', message: 'Oops! it will be fixed in future') {
                 sh 'npm run coverage'
+                }
             }
         }           
     }   
