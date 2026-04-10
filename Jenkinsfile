@@ -33,6 +33,11 @@ pipeline {
                 sh 'npm test'
                 junit allowEmptyResults: true, keepProperties: true, testResults: 'test-results.xml'
             }
-        }    
+        } 
+        stage('Code Coverage') {
+            steps {
+                sh 'npm run coverage'
+            }
+        }           
     }   
 }
