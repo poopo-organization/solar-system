@@ -3,7 +3,9 @@ pipeline {
 
     tools {
         nodejs 'Nodejs-20'
-        sonarScanner 'SonarQube-Scanner'
+    }
+    environment {
+        SONAR_SCANNER_HOME = tool 'SonarQube-Scanner'
     }
 
     stages {
@@ -44,8 +46,9 @@ pipeline {
         }
         stage('SAST - SonarQube') {
             steps {
+                sh 'echo $SONAR_SCANNER_HOME'
                 sh '''
-                sonar-scanner \
+                $SONAR_SCANNER_HOME/bin/sonar-scanner \
                     -Dsonar.projectKey=Solar-System-Project \
                     -Dsonar.sources=. \
                     -Dsonar.host.url=http://192.168.1.29:9000 \
