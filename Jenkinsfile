@@ -53,7 +53,7 @@ pipeline {
                         $SONAR_SCANNER_HOME/bin/sonar-scanner \
                             -Dsonar.projectKey=Solar-System-Project \
                             -Dsonar.sources=app.js \
-                            -Dsonar.javascript.lcov.reportPaths =./coverage/lcov.info
+                            -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info
                         '''
                     }
                     waitForQualityGate abortPipeline: true
