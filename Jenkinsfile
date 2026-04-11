@@ -75,7 +75,7 @@ pipeline {
                     --quiet \
                     --format json -o trivy-image-MEDIUM-results.json
 
-                    trivy image siddharth67/solar-system:$GIT_COMMIT \
+                    trivy image luzarow/solar-system:$GIT_COMMIT \
                     --severity CRITICAL \
                     --exit-code 1 \
                     --quiet \
