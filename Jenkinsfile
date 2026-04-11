@@ -65,6 +65,36 @@ pipeline {
                 sh 'printenv'
                 sh 'docker build -t luzarow/solar-system:$GIT_COMMIT .'
             }
+        }
+        stage('Trivy Vulnerability Scanner') {
+            steps {
+                sh '''
+                    trivy image luzarow/solar-system:$GIT_COMMIT \
+                    --severity LOW,MEDIUM,HIGH \
+                    --exit-code 0 \
+                    --quiet \
+                    --format json -o trivy-image-MEDIUM-results.json
+
+                    trivy image siddharth67/solar-system:$GIT_COMMIT \
+                    --severity CRITICAL \
+                    --exit-code 1 \
+                    --quiet \
+                    --format json -o trivy-image-CRITICAL-results.json
+                '''
+            }
+            post {
+                always {
+                    sh '''
+                        trivy convert \
+                            --format template --template "@/usr/local/share/trivy/templates/html.tpl" \
+                            --output trivy-image-MEDIUM-results.html trivy-image-MEDIUM-results.json
+
+                        trivy convert \
+                            --format template --template "@/usr/local/share/trivy/templates/html.tpl" \
+                            --output trivy-image-CRITICAL-results.html trivy-image-CRITICAL-results.json
+                    '''
+                }
+            }
         }           
     }   
 }
