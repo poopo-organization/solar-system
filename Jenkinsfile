@@ -59,6 +59,12 @@ pipeline {
                     waitForQualityGate abortPipeline: true
                 }    
             }
+        }
+        stage('Build Docker Image') {
+            steps {
+                sh 'printenv'
+                sh 'docker build -t luzarow/solar-system:$GIT_COMMIT .'
+            }
         }           
     }   
 }
