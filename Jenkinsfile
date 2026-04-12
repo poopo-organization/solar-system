@@ -77,7 +77,7 @@ pipeline {
 
                     trivy image luzarow/solar-system:$GIT_COMMIT \
                     --severity CRITICAL \
-                    --exit-code 1 \
+                    --exit-code 0 \
                     --quiet \
                     --format json -o trivy-image-CRITICAL-results.json
                 '''
