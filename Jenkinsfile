@@ -95,6 +95,13 @@ pipeline {
                     '''
                 }
             }
+        }
+        stage('Push Docker Image') {
+            steps {
+                withDockerRegistry(credentialsId: 'dockerhub-cred', url: "") {
+                    sh 'docker push luzarow/solar-system:$GIT_COMMIT'
+                }
+            }
         }           
     }   
 }
