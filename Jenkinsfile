@@ -115,7 +115,6 @@ pipeline {
         }
                 // Clone the new repository
                 sh '''
-                    rm -rf solar-system-argoCD
                     git clone -b main https://github.com/poopo-organization/solar-system-argoCD.git
                 '''
 
@@ -123,7 +122,7 @@ pipeline {
                     sh '''
                         #### Replace Docker Tag ####
                         git checkout main
-                        git checkout -b feature-$BUILD_ID
+                        git checkout -b feature-$BUILD_ID || git checkout feature-$BUILD_ID
                         sed -i "s#luzarow.*#luzarow/solar-system:$GIT_COMMIT#g" deployment.yml
                         cat deployment.yml
                         
@@ -132,7 +131,7 @@ pipeline {
                         git config --global user.name "Jenkins CI"
                         git remote set-url origin https://$GITHUB_TOKEN@github.com/poopo-organization/solar-system-argoCD.git
                         git add deployment.yml
-                        git commit -m "Updated docker image"
+                        git diff --cached --quiet || git commit -m "Updated docker image to $GIT_COMMIT"
                         git push -u origin feature-$BUILD_ID
                     '''
                 }
