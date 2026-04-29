@@ -108,8 +108,11 @@ pipeline {
         stage('K8S - Update Image Tag') {
             steps {
                 // Clone the new repository
-                sh 'git clone -b main https://github.com/poopo-organization/solar-system-argoCD.git'
-                
+                sh '''
+                    rm -rf solar-system-argoCD
+                    git clone -b main https://github.com/poopo-organization/solar-system-argoCD.git'
+                '''
+
                 dir("solar-system-argoCD/kubernetes") {
                     sh '''
                         #### Replace Docker Tag ####
