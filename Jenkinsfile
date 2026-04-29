@@ -121,8 +121,8 @@ pipeline {
                         #### Commit and Push to Feature Branch ####
                         git config --global user.email "jenkins@popo.com"
                         git remote set-url origin https://$GITHUB_TOKEN@github.com/poopo-organization/solar-system-argoCD.git
-                        git add .
-                        git commit -am "Updated docker image"
+                        git add deployment.yml
+                        git commit -m "Updated docker image"
                         git push -u origin feature-$BUILD_ID
                     '''
                 }
