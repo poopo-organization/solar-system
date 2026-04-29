@@ -110,7 +110,7 @@ pipeline {
                 // Clone the new repository
                 sh '''
                     rm -rf solar-system-argoCD
-                    git clone -b main https://github.com/poopo-organization/solar-system-argoCD.git'
+                    git clone -b main https://github.com/poopo-organization/solar-system-argoCD.git
                 '''
 
                 dir("solar-system-argoCD/kubernetes") {
