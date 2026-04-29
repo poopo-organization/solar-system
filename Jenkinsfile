@@ -107,6 +107,12 @@ pipeline {
         }
         stage('K8S - Update Image Tag') {
             steps {
+                script {
+            if (fileExists('solar-system-argoCD')) {
+                echo "Folder exists, removing..."
+                sh 'rm -rf solar-system-argoCD'
+            }
+        }
                 // Clone the new repository
                 sh '''
                     rm -rf solar-system-argoCD
@@ -123,6 +129,7 @@ pipeline {
                         
                         #### Commit and Push to Feature Branch ####
                         git config --global user.email "jenkins@popo.com"
+                        git config --global user.name "Jenkins CI"
                         git remote set-url origin https://$GITHUB_TOKEN@github.com/poopo-organization/solar-system-argoCD.git
                         git add deployment.yml
                         git commit -m "Updated docker image"
