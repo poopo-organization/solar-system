@@ -5,6 +5,7 @@ pipeline {
         nodejs 'Nodejs-20'
     }
     environment {
+        GITHUB_TOKEN = credentials('github-api-token')
         SONAR_SCANNER_HOME = tool 'SonarQube-Scanner'
     }
 
@@ -101,6 +102,29 @@ pipeline {
             steps {
                 withDockerRegistry(credentialsId: 'dockerhub-cred', url: "") {
                     sh 'docker push luzarow/solar-system:$GIT_COMMIT'
+                }
+            }
+        }
+        stage('K8S - Update Image Tag') {
+            steps {
+                // Clone the new repository
+                sh 'git clone -b main https://github.com/poopo-organization/solar-system-argoCD.git'
+                
+                dir("solar-system-argoCD/kubernetes") {
+                    sh '''
+                        #### Replace Docker Tag ####
+                        git checkout main
+                        git checkout -b feature-$BUILD_ID
+                        sed -i "s#luzarow.*#luzarow/solar-system:$GIT_COMMIT#g" deployment.yml
+                        cat deployment.yml
+                        
+                        #### Commit and Push to Feature Branch ####
+                        git config --global user.email "jenkins@popo.com"
+                        git remote set-url origin https://$GITHUB_TOKEN@github.com/poopo-organization/solar-system-argoCD.git
+                        git add .
+                        git commit -am "Updated docker image"
+                        git push -u origin feature-$BUILD_ID
+                    '''
                 }
             }
         }           
