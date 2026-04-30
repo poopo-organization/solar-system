@@ -136,6 +136,31 @@ pipeline {
                     '''
                 }
             }
-        }           
+        }
+
+        stage('App Deployed?') {
+            steps {
+                timeout(time: 1, unit: 'DAYS') {
+                    input message: 'Is the PR Merged and ArgoCD Synced?', ok: 'YES! PR is Merged and ArgoCD Application is Synced'
+                }
+            }
+        }
+
+        stage('DAST - OWASP ZAP') {
+            steps {
+                sh '''
+                    #### REPLACE below with Kubernetes http://IP_Address:30000/api-docs/ #####
+                    chmod 777 $(pwd)
+                    docker run -v $(pwd):/zap/wrk/:rw  ghcr.io/zaproxy/zaproxy zap-api-scan.py \
+                    -t http://192.168.1.29:30000/api-docs/ \
+                    -f openapi \
+                    -r zap_report.html \
+                    -w zap_report.md \
+                    -J zap_json_report.json \
+                    -x zap_xml_report.xml \
+                    -c zap_ignore_rules
+                '''
+            }
+        }   
     }   
 }
