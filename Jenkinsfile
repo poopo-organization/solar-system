@@ -161,6 +161,7 @@ pipeline {
                     -c zap_ignore_rules
                 '''
             }
+            publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: './', reportFiles: 'zap_report.html', reportName: 'DAST - OWASP ZAP Report', reportTitles: '', useWrapperFileDirectly: true])
         }   
     }   
 }
