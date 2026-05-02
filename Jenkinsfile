@@ -105,6 +105,24 @@ pipeline {
                 }
             }
         }
+
+        stage('Deploy - AWS EC2') {
+            steps {
+                script {
+                    sshagent(['aws-dev-deploy-ec2-instance']) {
+                        sh '''
+                            ssh -o StrictHostKeyChecking=no ubuntu@13.200.252.47 "
+                                if sudo docker ps -a | grep -q "solar-system"; then
+                                    sudo docker stop "solar-system" && sudo docker rm "solar-system"
+                                fi
+                                    sudo docker run --name solar-system -p 3000:3000 -d luzarow/solar-system:$GIT_COMMIT
+                            "
+                        '''
+                    } 
+                }          
+            }
+        }
+
         stage('K8S - Update Image Tag') {
             steps {
                 script {
